@@ -48,6 +48,7 @@ const LoginScreen = () => {
     //   navigation.navigate("Main");
     // }
     navigation.navigate("Main");
+    console.log("navigated");
   };
 
   const register = () => {};
