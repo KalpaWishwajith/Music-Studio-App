@@ -92,7 +92,7 @@ const LoginScreen = () => {
           <Text
             style={{ color: "white", textAlign: "center", fontWeight: "bold" }}
           >
-            Sign In
+            Log In
           </Text>
         </Pressable>
         <Pressable
@@ -112,7 +112,7 @@ const LoginScreen = () => {
           <Text
             style={{ color: "white", textAlign: "center", fontWeight: "bold" }}
           >
-            Sign Up
+            Register
           </Text>
         </Pressable>
       </SafeAreaView>
