@@ -7,63 +7,65 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import ProfileScreen from "./screens/ProfileScreen";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import LoginScreen from "./screens/LoginScreen";
+import WelcomeScreen from "./screens/WelcomeScreen";
+import SignUpScreen from "./screens/SignUpScreen";
 
 const Tab = createBottomTabNavigator();
 
-function BottomTabs() {
-  return (
-    <Tab.Navigator
-      screenOptions={{
-        tabBarStyle: {
-          backgroundColor: "rgba(0,0,0,0.5)",
-          position: "absolute",
-          left: 0,
-          right: 0,
-          bottom: 0,
-          shadowOpacity: 4,
-          shadowRadius: 4,
-          elevation: 1,
-          shadowOffset: {
-            width: 0,
-            height: -4,
-          },
-          borderTopWidth: 0,
-        },
-      }}
-    >
-      <Tab.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          tabBarLabel: "Home",
-          headerShown: false,
-          tabBarLabelStyle: { color: "white" },
-          tabBarIcon: ({ focused }) =>
-            focused ? (
-              <Entypo name="home" size={24} color="white" />
-            ) : (
-              <AntDesign name="home" size={24} color="white" />
-            ),
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          tabBarLabel: "Home",
-          headerShown: false,
-          tabBarLabelStyle: { color: "white" },
-          tabBarIcon: ({ focused }) =>
-            focused ? (
-              <Ionicons name="person-sharp" size={24} color="white" />
-            ) : (
-              <Ionicons name="person-outline" size={24} color="white" />
-            ),
-        }}
-      />
-    </Tab.Navigator>
-  );
-}
+// function BottomTabs() {
+//   return (
+//     <Tab.Navigator
+//       screenOptions={{
+//         tabBarStyle: {
+//           backgroundColor: "rgba(0,0,0,0.5)",
+//           position: "absolute",
+//           left: 0,
+//           right: 0,
+//           bottom: 0,
+//           shadowOpacity: 4,
+//           shadowRadius: 4,
+//           elevation: 1,
+//           shadowOffset: {
+//             width: 0,
+//             height: -4,
+//           },
+//           borderTopWidth: 0,
+//         },
+//       }}
+//     >
+//       <Tab.Screen
+//         name="Home"
+//         component={WelcomeScreen}
+//         options={{
+//           tabBarLabel: "Home",
+//           headerShown: false,
+//           tabBarLabelStyle: { color: "white" },
+//           tabBarIcon: ({ focused }) =>
+//             focused ? (
+//               <Entypo name="home" size={24} color="white" />
+//             ) : (
+//               <AntDesign name="home" size={24} color="white" />
+//             ),
+//         }}
+//       />
+//       <Tab.Screen
+//         name="Profile"
+//         component={ProfileScreen}
+//         options={{
+//           tabBarLabel: "Profile",
+//           headerShown: false,
+//           tabBarLabelStyle: { color: "white" },
+//           tabBarIcon: ({ focused }) =>
+//             focused ? (
+//               <Ionicons name="person-sharp" size={24} color="white" />
+//             ) : (
+//               <Ionicons name="person-outline" size={24} color="white" />
+//             ),
+//         }}
+//       />
+//     </Tab.Navigator>
+//   );
+// }
 
 const Stack = createNativeStackNavigator();
 
@@ -72,13 +74,23 @@ function NavigationBar() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
+          name="Main"
+          component={WelcomeScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="Login"
           component={LoginScreen}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Main"
-          component={BottomTabs}
+          name="SignUp"
+          component={SignUpScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
