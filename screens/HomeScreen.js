@@ -1,46 +1,31 @@
 import {
-  StyleSheet,
-  Text,
-  View,
-  SafeAreaView,
+  Animated,
   ScrollView,
-  Pressable,
   Image,
+  Text,
+  TouchableOpacity,
+  View,
+  Easing,
   FlatList,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { LinearGradient } from "expo-linear-gradient";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import AntDesign from "@expo/vector-icons/AntDesign";
+import React, { useEffect, useRef, useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { UserCircleIcon } from "react-native-heroicons/solid";
 import axios from "axios";
+import renderItem from "../components/RenderItem";
 
-const HomeScreen = () => {
-  const [userName, setUserName] = useState("");
+const HomeScreen = ({ route }) => {
+  const { userName = "Guest" } = route.params || {};
+
   const [playlist, setPlaylist] = useState([]);
-  const getUserProfile = async () => {
-    const accessToken = AsyncStorage.getItem("token");
-    try {
-      const response = await axios.get("https://api.spotify.com/v1/me", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      setUserName(response.data.display_name);
-      setUserName("John Doe");
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getUserProfile();
-  }, []);
+  const slideAnim = useRef(new Animated.Value(300)).current;
 
   const getPlaylist = async () => {
     try {
       const response = await axios.get(
-        "https://openwhyd.org/adrien?format=json"
+        "https://binaryjazz.us/wp-json/genrenator/v1/story/25/"
       );
+      console.log(response.data);
       setPlaylist(response.data);
     } catch (error) {
       console.log(error);
@@ -51,169 +36,72 @@ const HomeScreen = () => {
     getPlaylist();
   }, []);
 
-  const renderItem = ({ item }) => {
-    return (
-      <Pressable
-        style={{
-          marginBottom: 10,
-          flexDirection: "row",
-          alignItems: "center",
-          gap: 10,
-          flex: 1,
-          marginHorizontal: 10,
-          marginVertical: 8,
-          backgroundColor: "#202020",
-          borderRadius: 4,
-          elevation: 3,
-        }}
-      >
-        <Image
-          source={{
-            uri: item.img,
-          }}
-          style={{
-            width: 55,
-            height: 55,
-          }}
-        />
-        <View style={styles.randomArtists}>
-          <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
-            {item.name}
-          </Text>
-        </View>
-      </Pressable>
-    );
-  };
+  useEffect(() => {
+    Animated.timing(slideAnim, {
+      toValue: 0,
+      duration: 2300,
+      easing: Easing.ease,
+      useNativeDriver: true,
+    }).start();
+  }, [slideAnim]);
+
   return (
-    <LinearGradient colors={["#040306", "#131624"]} style={{ flex: 1 }}>
-      <ScrollView style={{ marginTop: 50 }}>
-        <View>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+    <FlatList
+      style={{ flex: 1, backgroundColor: "#7B71F9" }}
+      data={playlist}
+      renderItem={renderItem}
+      ListHeaderComponent={
+        <SafeAreaView style={{ flex: 1 }}>
+          <View
+            style={{
+              marginLeft: 16,
+              marginTop: 16,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
             <Text
               style={{
-                textAlign: "right",
-                marginRight: 20,
-                fontSize: 20,
+                fontSize: 24,
                 fontWeight: "bold",
                 color: "white",
               }}
             >
-              John Doe
+              {userName}
             </Text>
+            <TouchableOpacity style={{ marginLeft: "auto", marginRight: 16 }}>
+              <UserCircleIcon size="36" color="white" />
+            </TouchableOpacity>
           </View>
-        </View>
-        <View
-          style={{
-            marginHorizontal: 12,
-            marginVertical: 5,
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 10,
-            marginBottom: 10,
-          }}
-        >
-          <Pressable
-            style={{
-              backgroundColor: "#282828",
-              padding: 10,
-              borderRadius: 30,
-            }}
-          >
-            <Text style={{ fontSize: 15, color: "white" }}>Music</Text>
-          </Pressable>
-
-          <Pressable
-            style={{
-              backgroundColor: "#282828",
-              padding: 10,
-              borderRadius: 30,
-            }}
-          >
-            <Text style={{ fontSize: 15, color: "white" }}>
-              Podcasts & Shows
-            </Text>
-          </Pressable>
-        </View>
-        <View style={{ height: 10 }} />
-        <View>
-          <Pressable
-            style={{
-              marginBottom: 10,
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 10,
-              flex: 1,
-              marginHorizontal: 10,
-              marginVertical: 8,
-              backgroundColor: "#202020",
-              borderRadius: 4,
-              elevation: 3,
-            }}
-          >
-            <LinearGradient colors={["#33006F", "#FFFFFF"]}>
-              <Pressable
-                style={{
-                  width: 55,
-                  height: 55,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <AntDesign name="heart" size={24} color="white" />
-              </Pressable>
-            </LinearGradient>
-            <Text style={{ color: "white", fontSize: 16, fontWeight: "bold" }}>
-              Liked Songs
-            </Text>
-          </Pressable>
           <View
             style={{
-              marginBottom: 10,
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 10,
+              marginTop: 30,
               flex: 1,
-              marginHorizontal: 10,
-              marginVertical: 8,
-              backgroundColor: "#202020",
-              borderRadius: 4,
-              elevation: 3,
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
             <Image
-              source={{
-                uri: "https://i.pravatar.cc/100",
-              }}
-              style={{
-                width: 55,
-                height: 55,
-              }}
+              source={require("../assets/icon.png")}
+              style={{ width: 120, height: 120, marginBottom: 16 }}
             />
-            <View style={styles.randomArtists}>
+            <Animated.View
+              style={{
+                transform: [{ translateX: slideAnim }],
+              }}
+            >
               <Text
-                style={{ color: "white", fontSize: 16, fontWeight: "bold" }}
+                style={{ fontSize: 24, color: "#facc15", fontWeight: "bold" }}
               >
-                Hipop Thamaize
+                Welcome to Music Studio !
               </Text>
-            </View>
+            </Animated.View>
           </View>
-        </View>
-        <Text
-          style={{
-            color: "white",
-            fontSize: 20,
-            fontWeight: "bold",
-            marginLeft: 10,
-          }}
-        >
-          Playlist
-        </Text>
-      </ScrollView>
-      <FlatList data={playlist} renderItem={renderItem}></FlatList>
-    </LinearGradient>
+        </SafeAreaView>
+      }
+      keyExtractor={(item, index) => (item.name ? item.name : index.toString())}
+    />
   );
 };
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({});
