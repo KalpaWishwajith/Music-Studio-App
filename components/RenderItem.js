@@ -11,8 +11,8 @@ const renderItem = ({ item }) => {
         gap: 10,
         flex: 1,
         marginHorizontal: 10,
-        marginVertical: 8,
-        backgroundColor: "#202020",
+        marginVertical: 2,
+        backgroundColor: "#44318E",
         borderRadius: 24,
         elevation: 3,
         paddingHorizontal: 10,
@@ -24,12 +24,12 @@ const renderItem = ({ item }) => {
       >
         <Image
           source={{
-            uri: item.img,
+            uri: item.artworkUrl100,
           }}
           style={{
             borderRadius: 24,
-            width: 55,
-            height: 55,
+            width: 65,
+            height: 65,
           }}
         />
       </TouchableOpacity>
@@ -39,29 +39,52 @@ const renderItem = ({ item }) => {
           flex: 1,
           justifyContent: "center",
           marginLeft: 10,
+          flexDirection: "column",
+          gap: 2,
         }}
       >
         <Text
           style={{
             color: "white",
             fontSize: 16,
-            fontWeight: "semibold",
+            fontWeight: "bold",
             flexShrink: 1,
             flexWrap: "wrap",
           }}
         >
-          {item.name}
+          {item.trackName}
+        </Text>
+        <Text
+          style={{
+            color: "#facc15",
+            fontSize: 16,
+            fontWeight: "500",
+            flexShrink: 1,
+            flexWrap: "wrap",
+          }}
+        >
+          {item.artistName}
         </Text>
         <Text
           style={{
             color: "white",
-            fontSize: 16,
+            fontSize: 14,
             fontWeight: "semibold",
             flexShrink: 1,
             flexWrap: "wrap",
           }}
         >
-          {item.name}
+          Genre : {item.primaryGenreName}
+        </Text>
+        <Text
+          style={{
+            color: "lightgreen",
+            fontSize: 12,
+            flexShrink: 1,
+            flexWrap: "wrap",
+          }}
+        >
+          Collection : {item.collectionName}
         </Text>
       </View>
     </TouchableOpacity>

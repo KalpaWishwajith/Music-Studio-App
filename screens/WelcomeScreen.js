@@ -98,7 +98,7 @@ const WelcomeScreen = () => {
                   color: "#facc15",
                 }}
               >
-                Log In
+                Login
               </Text>
             </TouchableOpacity>
           </View>

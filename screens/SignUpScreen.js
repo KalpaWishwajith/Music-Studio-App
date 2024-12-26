@@ -4,6 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/native";
 import TextInputField from "../components/TextInputField";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../config/firebase";
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -15,22 +17,20 @@ const SignUpScreen = () => {
   const [passwordError, setPasswordError] = useState("");
   const [userNameError, setUserNameError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
-
+  let isValid = true;
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
 
   const handleValidation = () => {
-    let isValid = true;
-
     if (!userName.trim()) {
       setUserNameError("User Name is required.");
       isValid = false;
     } else {
       setUserNameError("");
     }
-
+    setEmail(email.toLowerCase().trim());
     if (!email.trim()) {
       setEmailError("Email is required.");
       isValid = false;
@@ -60,14 +60,18 @@ const SignUpScreen = () => {
     } else {
       setConfirmPasswordError("");
     }
-
-    if (isValid) {
-      alert("All fields are valid!");
-    }
   };
 
-  const handleSignUp = () => {
+  const handleSignUp = async () => {
     handleValidation();
+    if (isValid) {
+      try {
+        response = await createUserWithEmailAndPassword(auth, email, password);
+        console.log(response);
+      } catch (error) {
+        console.error(error);
+      }
+    }
   };
 
   return (

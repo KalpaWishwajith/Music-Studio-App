@@ -4,22 +4,30 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/native";
 import TextInputField from "../components/TextInputField";
+import { auth } from "../config/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginScreen = () => {
   const navigation = useNavigation();
-  const [userName, setUserName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [userNameError, setUserNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
+  let isValid = true;
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
   const handleValidation = () => {
-    let isValid = true;
-
-    if (!userName.trim()) {
-      setUserNameError("User Name is required.");
+    setEmail(email.toLowerCase().trim());
+    if (!email.trim()) {
+      setEmailError("Email is required.");
+      isValid = false;
+    } else if (!validateEmail(email)) {
+      setEmailError("Please enter a valid email address.");
       isValid = false;
     } else {
-      setUserNameError("");
+      setEmailError("");
     }
 
     if (!password.trim()) {
@@ -28,15 +36,18 @@ const LoginScreen = () => {
     } else {
       setPasswordError("");
     }
-
-    if (isValid) {
-      alert("All fields are valid!");
-    }
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     handleValidation();
-    navigation.navigate("Home", { userName });
+    if (isValid) {
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        navigation.navigate("Home", { email });
+      } catch (error) {
+        alert(error.message);
+      }
+    }
   };
 
   return (
@@ -79,7 +90,7 @@ const LoginScreen = () => {
             paddingRight: 32,
             borderTopLeftRadius: 50,
             borderTopRightRadius: 50,
-            paddingBottom: 50,
+            paddingBottom: 68,
           }}
         >
           <View
@@ -90,11 +101,11 @@ const LoginScreen = () => {
             }}
           >
             <TextInputField
-              label="User Name"
-              value={userName}
-              onChangeText={setUserName}
-              error={userNameError}
-              placeholder="Enter User Name"
+              label="Email"
+              value={email}
+              onChangeText={setEmail}
+              error={emailError}
+              placeholder="Enter Your Email"
             />
             <TextInputField
               label="Password"
@@ -197,7 +208,6 @@ const LoginScreen = () => {
               marginTop: 16,
               flexDirection: "row",
               justifyContent: "center",
-              marginBottom: 16,
             }}
           >
             <Text
