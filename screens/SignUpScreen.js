@@ -4,21 +4,32 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import { useNavigation } from "@react-navigation/native";
 import TextInputField from "../components/TextInputField";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
 
-const LoginScreen = () => {
+const SignUpScreen = () => {
   const navigation = useNavigation();
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [userNameError, setUserNameError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   let isValid = true;
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+
   const handleValidation = () => {
+    if (!userName.trim()) {
+      setUserNameError("User Name is required.");
+      isValid = false;
+    } else {
+      setUserNameError("");
+    }
     setEmail(email.toLowerCase().trim());
     if (!email.trim()) {
       setEmailError("Email is required.");
@@ -33,18 +44,32 @@ const LoginScreen = () => {
     if (!password.trim()) {
       setPasswordError("Password is required.");
       isValid = false;
+    } else if (password.length < 8) {
+      setPasswordError("Password must be at least 8 characters long.");
+      isValid = false;
     } else {
       setPasswordError("");
     }
+
+    if (!confirmPassword.trim()) {
+      setConfirmPasswordError("Confirm Password is required.");
+      isValid = false;
+    } else if (confirmPassword !== password) {
+      setConfirmPasswordError("Password and Confirm Password must be same.");
+      isValid = false;
+    } else {
+      setConfirmPasswordError("");
+    }
   };
 
-  const handleLogin = async () => {
+  const handleSignUp = async () => {
     handleValidation();
     if (isValid) {
       try {
-        await signInWithEmailAndPassword(auth, email, password);
+        response = await createUserWithEmailAndPassword(auth, email, password);
+        console.log(response);
       } catch (error) {
-        alert(error.message);
+        console.error(error);
       }
     }
   };
@@ -75,7 +100,7 @@ const LoginScreen = () => {
             }}
           >
             <Image
-              source={require("../assets/login.png")}
+              source={require("../assets/signup.png")}
               style={{ width: 200, height: 200 }}
             />
           </View>
@@ -89,22 +114,27 @@ const LoginScreen = () => {
             paddingRight: 32,
             borderTopLeftRadius: 50,
             borderTopRightRadius: 50,
-            paddingBottom: 68,
           }}
         >
           <View
             style={{
               flexDirection: "column",
-              justifyContent: "center",
               gap: 2,
             }}
           >
             <TextInputField
-              label="Email"
+              label="User Name"
+              value={userName}
+              onChangeText={setUserName}
+              error={userNameError}
+              placeholder="Enter User Name"
+            />
+            <TextInputField
+              label="Email Address"
               value={email}
               onChangeText={setEmail}
               error={emailError}
-              placeholder="Enter Your Email"
+              placeholder="Enter your Email Address"
             />
             <TextInputField
               label="Password"
@@ -114,16 +144,14 @@ const LoginScreen = () => {
               placeholder="Enter Password"
               secureTextEntry
             />
-            <TouchableOpacity
-              style={{
-                display: "flex",
-                alignItems: "flex-end",
-                marginTop: 2,
-                marginBottom: 20,
-              }}
-            >
-              <Text>Forgot Password?</Text>
-            </TouchableOpacity>
+            <TextInputField
+              label="Confirm Password"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              error={confirmPasswordError}
+              placeholder="Confirm Password"
+              secureTextEntry
+            />
             <TouchableOpacity
               style={{
                 paddingBottom: 12,
@@ -131,7 +159,7 @@ const LoginScreen = () => {
                 backgroundColor: "#facc15",
                 borderRadius: 12,
               }}
-              onPress={handleLogin}
+              onPress={handleSignUp}
             >
               <Text
                 style={{
@@ -141,7 +169,7 @@ const LoginScreen = () => {
                   color: "#4a5568",
                 }}
               >
-                Login
+                Sign Up
               </Text>
             </TouchableOpacity>
           </View>
@@ -207,6 +235,7 @@ const LoginScreen = () => {
               marginTop: 16,
               flexDirection: "row",
               justifyContent: "center",
+              marginBottom: 16,
             }}
           >
             <Text
@@ -216,16 +245,16 @@ const LoginScreen = () => {
                 fontWeight: "semibold",
               }}
             >
-              Don't have an account?
+              Already have an account?
             </Text>
-            <TouchableOpacity onPress={() => navigation.navigate("SignUp")}>
+            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
               <Text
                 style={{
                   fontWeight: "semibold",
                   color: "#facc15",
                 }}
               >
-                Sign Up
+                Login
               </Text>
             </TouchableOpacity>
           </View>
@@ -235,4 +264,4 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default SignUpScreen;
