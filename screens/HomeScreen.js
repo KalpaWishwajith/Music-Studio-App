@@ -14,7 +14,7 @@ import {
   UserCircleIcon,
   ArrowLeftStartOnRectangleIcon,
 } from "react-native-heroicons/solid";
-import axios from "axios";
+
 import renderItem from "../components/RenderItem";
 import { create } from "zustand";
 import FloatingButton from "../components/FloatingButton";
@@ -22,6 +22,7 @@ import { auth } from "../config/firebase";
 import { signOut } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 import useAuth from "../hooks/useAuth";
+import { getPlaylist } from "../services/PlaylistServices";
 
 const useStore = create((set) => ({
   count: 0,
@@ -41,19 +42,18 @@ const HomeScreen = () => {
       alert(error.message);
     }
   };
-  const getPlaylist = async () => {
+
+  const getData = async () => {
     try {
-      const response = await axios.get(
-        "https://itunes.apple.com/search?term=ed+sheeran&entity=song"
-      );
-      setPlaylist(response.data.results);
+      const response = await getPlaylist();
+      setPlaylist(response.results);
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    getPlaylist();
+    getData();
   }, []);
 
   useEffect(() => {
