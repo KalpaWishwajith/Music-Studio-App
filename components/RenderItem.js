@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, TouchableOpacity, View, Image } from "react-native";
 
-const renderItem = ({ item }) => {
+const renderItem = ({ item, increment }) => {
   return (
     <TouchableOpacity
       style={{
@@ -18,6 +18,7 @@ const renderItem = ({ item }) => {
         paddingHorizontal: 10,
         paddingVertical: 8,
       }}
+      onPress={increment}
     >
       <TouchableOpacity
         style={{ padding: 2, backgroundColor: "#f3f4f6", borderRadius: 24 }}

@@ -37,7 +37,6 @@ const HomeScreen = () => {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigation.navigate("Login");
     } catch (error) {
       alert(error.message);
     }
@@ -73,7 +72,7 @@ const HomeScreen = () => {
       <FlatList
         style={{ flex: 1, backgroundColor: "#7B71F9" }}
         data={playlist}
-        renderItem={renderItem}
+        renderItem={({ item }) => renderItem({ item, increment })}
         ListHeaderComponent={
           <SafeAreaView style={{ flex: 1 }}>
             <View

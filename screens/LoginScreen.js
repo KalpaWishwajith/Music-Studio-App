@@ -43,7 +43,6 @@ const LoginScreen = () => {
     if (isValid) {
       try {
         await signInWithEmailAndPassword(auth, email, password);
-        navigation.navigate("Home", { email });
       } catch (error) {
         alert(error.message);
       }

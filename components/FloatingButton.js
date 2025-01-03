@@ -20,7 +20,6 @@ const FloatingButton = ({ count, increment }) => {
         shadowRadius: 3,
         elevation: 5,
       }}
-      onPress={increment}
     >
       <Text style={{ color: "white", fontSize: 20, fontWeight: "bold" }}>
         {count}

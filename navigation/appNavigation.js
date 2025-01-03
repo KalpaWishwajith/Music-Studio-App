@@ -20,11 +20,6 @@ const AppNavigation = () => {
             component={HomeScreen}
             options={{ headerShown: false }}
           />
-          <Stack.Screen
-            name="Login"
-            component={LoginScreen}
-            options={{ headerShown: false }}
-          />
         </Stack.Navigator>
       </NavigationContainer>
     );
@@ -35,11 +30,6 @@ const AppNavigation = () => {
           <Stack.Screen
             name="Main"
             component={WelcomeScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Home"
-            component={HomeScreen}
             options={{ headerShown: false }}
           />
           <Stack.Screen
